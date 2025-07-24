@@ -314,3 +314,33 @@
   animation: loading-spin 1s ease-in-out infinite;
   margin-left: 10px;
 }
+.wallet-readonly-container {
+  background: #0a0a0a;
+  border: 1px solid #00f0ff;
+  border-radius: 8px;
+  padding: 12px 18px;
+  font-family: 'Courier New', monospace;
+  font-size: 1.1rem;
+  color: #00f0ff;
+  box-shadow: 0 0 10px #00f0ff44;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  user-select: text;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  min-height: calc(1.1rem * 1.5 * 4); /* font-size * line-height * 3 lines */
+  line-height: 1.5;
+
+}
+.wallet-readonly-container:hover {
+  box-shadow: 0 0 15px #00f0ff99;
+  background-color: #111;
+}
+
+.wallet-readonly-container.copied {
+  color: #00ff99;
+  border-color: #00ff99;
+  box-shadow: 0 0 10px #00ff99aa;
+}

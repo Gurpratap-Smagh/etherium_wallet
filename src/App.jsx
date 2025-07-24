@@ -1,11 +1,12 @@
-import { useState, } from 'react'
+import { useState} from 'react'
 import {BrowserRouter, Routes, Route, Link, Outlet, Navigate} from 'react-router-dom'
 import { RecoilRoot, useRecoilValue, useSetRecoilState, useRecoilCallback } from 'recoil'
-import {containers, public_key, private_key, seed_phrase, d_id} from './atoms.jsx'
+import {containers, public_key, private_key, seed_phrase, d_id, clearKeysAtom} from './atoms.jsx'
 import './App.css'
 import { Mnemonic, ethers, Wallet } from 'ethers' // took me ages to realise, we must do alot of work to use bip32 and others
 
 function App() {
+
   return (
     <RecoilRoot>
       <BrowserRouter>
@@ -21,7 +22,7 @@ function App() {
         </div>
       </BrowserRouter>
     </RecoilRoot>
-  )
+  );
 }
 function Home_page() {
   return (
@@ -61,21 +62,11 @@ function Ethos() {
       </div>
       <Show_the_stuff />
     </div>
-  )
+  );
 }
 function Input_seed() {
-  const [input_value, input_box] = useState("")
-  const changing_seed = useSetRecoilState(seed_phrase)
-  const seed_value = useRecoilValue(seed_phrase)
+  const seed_value = useRecoilValue(seed_phrase);
   const [copied, setCopied] = useState(false);
-
-  const change_seed = function(e) {
-    const new_value = e.target.value;
-    input_box(new_value);   
-    changing_seed(new_value)
-    console.log("changed")
-  }
-
   const handleCopy = () => {
     navigator.clipboard.writeText(seed_value.phrase);
     setCopied(true);
@@ -83,22 +74,16 @@ function Input_seed() {
   };
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center' }}>
-      <input 
-        className="wallet-input" 
-        onChange={change_seed} 
-        value={seed_value.phrase} 
-        placeholder="Enter your seed phrase..."
-        style={{ flex: 1, marginRight: '0.5rem' }} // Take up remaining space
-      />
-      <button 
-        className="wallet-button"
-        onClick={handleCopy}
-        style={{ padding: '8px 12px', fontSize: '0.8rem', minWidth: 'auto' }} // Smaller button
-      >
-        {copied ? 'Copied!' : 'Copy'}
-      </button>
-    </div>
+    <div className={`wallet-readonly-container ${copied ? 'copied' : ''}`}>
+    <div
+    className={`wallet-readonly copyshi ${copied ? 'copied' : ''}`}
+    onClick={handleCopy}
+    style={{ flex: 1, marginRight: '0.5rem', cursor: 'pointer' }}
+    title="Click to copy"
+  >
+    {seed_value.phrase}
+  </div>
+</div>
   )
 }
 // function Handle_change() {
@@ -139,19 +124,17 @@ function Handle_change() {
   return <button className="wallet-button" onClick={updateState}>⚡ Generate Keys</button>;
 }
 function Show_the_stuff() {
-  const get_ar = useRecoilValue(containers)
+  const get_ar = useRecoilValue(containers);
   const [copiedStates, setCopiedStates] = useState({});
 
   const handleCopyClick = (e, id) => {
     const text = e.target.innerText;
     navigator.clipboard.writeText(text);
 
-    // Set "copied" state for the clicked item
-    setCopiedStates(prevState => ({ ...prevState, [id]: true }));
+    setCopiedStates((prevState) => ({ ...prevState, [id]: true }));
 
-    // Remove "copied" state after 1.5 seconds
     setTimeout(() => {
-      setCopiedStates(prevState => {
+      setCopiedStates((prevState) => {
         const newState = { ...prevState };
         delete newState[id];
         return newState;
@@ -162,9 +145,14 @@ function Show_the_stuff() {
   return (
     <div>
       {get_ar.map((i) => (
-        <div key={i.id} style={{ marginBottom: '1rem' }}>
-          <div className="key-display private-key" >
-            <strong>🔒 Private Key:</strong><br />
+        <div
+          key={i.id}
+          className="key-display-wrapper"
+          style={{ marginBottom: '1rem' }}
+        >
+          <div className="key-display private-key">
+            <strong>🔒 Private Key:</strong>
+            <br />
             <div
               className={`copyshi ${copiedStates[i.id] ? 'copied' : ''}`}
               onClick={(e) => handleCopyClick(e, i.id)}
@@ -173,7 +161,8 @@ function Show_the_stuff() {
             </div>
           </div>
           <div className="key-display public-key">
-            <strong>🔑 Public Key:</strong><br />
+            <strong>🔑 Public Key:</strong>
+            <br />
             <div
               className={`copyshi ${copiedStates[i.id] ? 'copied' : ''}`}
               onClick={(e) => handleCopyClick(e, i.id)}
@@ -184,14 +173,23 @@ function Show_the_stuff() {
         </div>
       ))}
     </div>
-  )
+  );
 }
+
 function Generate_nem() {
   const changing_seed = useSetRecoilState(seed_phrase)
+  const clearKeys = useRecoilCallback(({ set }) => () => {
+    set(clearKeysAtom, true);
+    setTimeout(() => {
+      set(clearKeysAtom, false);
+      set(containers, []);
+    }, 500);
+  });
 
   function generator() {
     const mnemonic = Mnemonic.fromEntropy(ethers.randomBytes(16));
     changing_seed(mnemonic);
+    clearKeys()
     console.log("Generated seed phrase:", mnemonic.phrase);
   }
   return (
@@ -335,4 +333,7 @@ function Priv_to_pub() {
     </div>
   )
 }
+
+
 export default App
+

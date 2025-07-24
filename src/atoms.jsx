@@ -49,4 +49,10 @@ const private_key = selector({
 
   },
 })
-export { containers, public_key, private_key, seed_phrase, d_id };
+
+const clearKeysAtom = atom({
+  key: 'clearKeys',
+  default: false,
+});
+
+export { containers, public_key, private_key, seed_phrase, d_id, clearKeysAtom };
