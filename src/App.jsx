@@ -67,19 +67,38 @@ function Input_seed() {
   const [input_value, input_box] = useState("")
   const changing_seed = useSetRecoilState(seed_phrase)
   const seed_value = useRecoilValue(seed_phrase)
+  const [copied, setCopied] = useState(false);
+
   const change_seed = function(e) {
     const new_value = e.target.value;
     input_box(new_value);   
     changing_seed(new_value)
     console.log("changed")
   }
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(seed_value.phrase);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
   return (
-    <input 
-      className="wallet-input" 
-      onChange={change_seed} 
-      value={seed_value.phrase} 
-      placeholder="Enter your seed phrase..."
-    />
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <input 
+        className="wallet-input" 
+        onChange={change_seed} 
+        value={seed_value.phrase} 
+        placeholder="Enter your seed phrase..."
+        style={{ flex: 1, marginRight: '0.5rem' }} // Take up remaining space
+      />
+      <button 
+        className="wallet-button"
+        onClick={handleCopy}
+        style={{ padding: '8px 12px', fontSize: '0.8rem', minWidth: 'auto' }} // Smaller button
+      >
+        {copied ? 'Copied!' : 'Copy'}
+      </button>
+    </div>
   )
 }
 // function Handle_change() {
@@ -121,17 +140,46 @@ function Handle_change() {
 }
 function Show_the_stuff() {
   const get_ar = useRecoilValue(containers)
+  const [copiedStates, setCopiedStates] = useState({});
+
+  const handleCopyClick = (e, id) => {
+    const text = e.target.innerText;
+    navigator.clipboard.writeText(text);
+
+    // Set "copied" state for the clicked item
+    setCopiedStates(prevState => ({ ...prevState, [id]: true }));
+
+    // Remove "copied" state after 1.5 seconds
+    setTimeout(() => {
+      setCopiedStates(prevState => {
+        const newState = { ...prevState };
+        delete newState[id];
+        return newState;
+      });
+    }, 1500);
+  };
+
   return (
     <div>
       {get_ar.map((i) => (
         <div key={i.id} style={{ marginBottom: '1rem' }}>
-          <div className="key-display private-key">
+          <div className="key-display private-key" >
             <strong>🔒 Private Key:</strong><br />
-            {i.private_key}
+            <div
+              className={`copyshi ${copiedStates[i.id] ? 'copied' : ''}`}
+              onClick={(e) => handleCopyClick(e, i.id)}
+            >
+              {i.private_key}
+            </div>
           </div>
           <div className="key-display public-key">
             <strong>🔑 Public Key:</strong><br />
-            {i.public_key}
+            <div
+              className={`copyshi ${copiedStates[i.id] ? 'copied' : ''}`}
+              onClick={(e) => handleCopyClick(e, i.id)}
+            >
+              {i.public_key}
+            </div>
           </div>
         </div>
       ))}
@@ -156,8 +204,16 @@ function Generate_nem() {
 function See_balance() {
   const [balance, setBalance] = useState(null);
   const [address, setAddress] = useState("");
+  const [usd, setusd] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [copiedBalance, setCopiedBalance] = useState(false);
+  const [copiedUsd, setCopiedUsd] = useState(false);
   const provider = new ethers.JsonRpcProvider(`https://eth-mainnet.g.alchemy.com/v2/${import.meta.env.VITE_ALCHEMY_API_KEY}`)
+  const fetchEthPrice = async () => {
+  	const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd");
+ 	const data = await res.json();
+ 	return data.ethereum.usd;
+};
 
   const fetchBalance = async () => {
     if (!address.trim()) return;
@@ -165,14 +221,24 @@ function See_balance() {
     try {
       const bal = await provider.getBalance(address);
       setBalance(ethers.formatEther(bal));
+      const pric = await fetchEthPrice();
+      const parsed = parseFloat(ethers.formatEther(bal));
+      setusd((pric * parseFloat(parsed)).toFixed(2))
     } catch (error) {
       console.error("Error fetching balance:", error);
       setBalance("Error fetching balance");
+      setusd("unable to fetch the price")
     } finally {
       setLoading(false);
     }
   }
   
+  const handleCopyBalance = (text, setter) => {
+    navigator.clipboard.writeText(text);
+    setter(true);
+    setTimeout(() => setter(false), 1500);
+  };
+
   return (
     <div className="content-card">
       <h2 className="form-label">💰 Balance Checker</h2>
@@ -195,10 +261,14 @@ function See_balance() {
           '🔍 Get Balance'
         )}
       </button>
-      {balance !== null && (
-        <div className="balance-display">
-          💎 Balance: {balance} ETH
-        </div>
+      {balance !== null && (<>
+        	<div className="balance-display">
+          	💎 Balance: <div className={`copyshi ${copiedBalance ? 'copied' : ''}`} onClick={() => handleCopyBalance(balance, setCopiedBalance)}>{balance}</div> ETH
+        	</div>
+		<div className="balance-display">
+	  	💎 Balance: $<div className={`copyshi ${copiedUsd ? 'copied' : ''}`} onClick={() => handleCopyBalance(usd, setCopiedUsd)}>{usd}</div> USD
+		</div>
+	</>
       )}
     </div>
   )
@@ -208,6 +278,7 @@ function Priv_to_pub() {
   const [inputd, setInput] = useState("");
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
+  const [copiedResult, setCopiedResult] = useState(false);
 
   const convertKey = async () => {
     if (!inputd.trim()) return;
@@ -222,6 +293,12 @@ function Priv_to_pub() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCopyResult = () => {
+    navigator.clipboard.writeText(result);
+    setCopiedResult(true);
+    setTimeout(() => setCopiedResult(false), 1500);
   };
 
   return (
@@ -250,7 +327,9 @@ function Priv_to_pub() {
       {result && (
         <div className="output-container">
           <strong>🔑 Public Address:</strong><br />
-          {result}
+          <div className={`copyshi ${copiedResult ? 'copied' : ''}`} onClick={handleCopyResult}>
+            {result}
+          </div>
         </div>
       )}
     </div>
