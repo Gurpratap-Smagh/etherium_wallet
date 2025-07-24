@@ -22,7 +22,7 @@ const public_key = selector({
     console.log("Seed phrase:", seed_p);
     const index = get(d_id)
     console.log("before deriving")
-    const derivationPath = `44'/60'/0'/0/${index}`;
+    const derivationPath = `44'/60'/0'/0/${index}`; // another learning, HDnodewallet function creates a master path, so we have to give it a child path as input, I wasted my 2 hrs figuring this out :(
     const hdNode = HDNodeWallet.fromPhrase(seed_p.phrase);
     console.log("after before deriving")
     const wallet = hdNode.derivePath(derivationPath);    
