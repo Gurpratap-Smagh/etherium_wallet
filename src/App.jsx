@@ -263,10 +263,10 @@ function See_balance() {
       </button>
       {balance !== null && (<>
         	<div className="balance-display">
-          	💎 Balance: <div className={`copyshi ${copiedBalance ? 'copied' : ''}`} onClick={() => handleCopyBalance(balance, setCopiedBalance)}>{balance}</div> ETH
+          	💎 Balance: <span className={`copyshi ${copiedBalance ? 'copied' : ''}`} onClick={() => handleCopyBalance(balance, setCopiedBalance)}>{balance}</span> ETH
         	</div>
 		<div className="balance-display">
-	  	💎 Balance: $<div className={`copyshi ${copiedUsd ? 'copied' : ''}`} onClick={() => handleCopyBalance(usd, setCopiedUsd)}>{usd}</div> USD
+	  	💎 Balance: $<span className={`copyshi ${copiedUsd ? 'copied' : ''}`} onClick={() => handleCopyBalance(usd, setCopiedUsd)}>{usd}</span> USD
 		</div>
 	</>
       )}
