@@ -3,7 +3,7 @@ import {BrowserRouter, Routes, Route, Link, Outlet, Navigate} from 'react-router
 import { RecoilRoot, useRecoilValue, useSetRecoilState, useRecoilCallback } from 'recoil'
 import {containers, public_key, private_key, seed_phrase, d_id} from './atoms.jsx'
 import './App.css'
-import { Mnemonic, ethers, Wallet } from 'ethers'
+import { Mnemonic, ethers, Wallet } from 'ethers' // took me ages to realise, we must do alot of work to use bip32 and others
 
 function App() {
   return (
@@ -98,7 +98,7 @@ function Input_seed() {
 //   return <>
 //     <button onClick={master_g}>get_prkey</button>
 //   </>
-// }
+// }  This was a noob attempt
 function Handle_change() {
   const indexd = useRecoilValue(d_id);
   const updateState = useRecoilCallback(({ snapshot, set }) => async () => {
@@ -244,7 +244,7 @@ function Priv_to_pub() {
             <span className="loading"></span>
           </>
         ) : (
-          '🔄 Convert to Public'
+          '🔄 Get public address'
         )}
       </button>
       {result && (
