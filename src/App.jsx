@@ -33,13 +33,13 @@ function Home_page() {
       </div>
       
       <nav className="nav-container">
-        <Link to="/home/eth_wallet" className="nav-link">
+        <Link to="/eth_wallet" className="nav-link">
           🔐 Ethereum Wallet
         </Link>
-        <Link to="/home/balance" className="nav-link">
+        <Link to="/balance" className="nav-link">
           💰 Balance Check
         </Link>
-        <Link to="/home/priv_to_pub" className="nav-link">
+        <Link to="/priv_to_pub" className="nav-link">
           🔑 Key Converter
         </Link>
       </nav>
