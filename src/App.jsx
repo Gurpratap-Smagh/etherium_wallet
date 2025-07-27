@@ -12,11 +12,11 @@ function App() {
       <BrowserRouter>
         <div className="wallet-container">
           <Routes>
-            <Route path="*" element={<Navigate to="/home" replace />} />
-            <Route path="/home" element={<Home_page />}>
-              <Route path="/home/eth_wallet" element={<Ethos />} />
-              <Route path="/home/balance" element={<See_balance />} />
-              <Route path="/home/priv_to_pub" element={<Priv_to_pub />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="/" element={<Home_page />}>
+              <Route path="/eth_wallet" element={<Ethos />} />
+              <Route path="/balance" element={<See_balance />} />
+              <Route path="/priv_to_pub" element={<Priv_to_pub />} />
             </Route>
           </Routes>
         </div>
