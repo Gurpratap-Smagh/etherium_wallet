@@ -1,7 +1,7 @@
-import { useState} from 'react'
+import { useState, useEffect} from 'react'
 import {BrowserRouter, Routes, Route, Link, Outlet, Navigate} from 'react-router-dom'
 import { RecoilRoot, useRecoilValue, useSetRecoilState, useRecoilCallback } from 'recoil'
-import {containers, public_key, private_key, seed_phrase, d_id, clearKeysAtom} from './atoms.jsx'
+import { containersFamily, seed_phrase, d_id, clearKeysAtom} from './atoms.jsx'
 import './App.css'
 import { Mnemonic, ethers, Wallet } from 'ethers' // took me ages to realise, we must do alot of work to use bip32 and others
 
@@ -104,28 +104,36 @@ function Input_seed() {
 //   </>
 // }  This was a noob attempt
 function Handle_change() {
-  const indexd = useRecoilValue(d_id);
-  const updateState = useRecoilCallback(({ snapshot, set }) => async () => {
+  const increase = useSetRecoilState(d_id);
+  const keyPair = () => {  
+  increase((prev) => prev + 1);
+  }
+  
 
-    const new_prkey = await snapshot.getPromise(private_key);
-    const new_pukey = await snapshot.getPromise(public_key);
+  
 
-    const new_box = {
-      id: crypto.randomUUID(),
-      private_key: new_prkey,
-      public_key: new_pukey,
-    };
-
-    set(containers, (prev) => [...prev, new_box]);
-    set(d_id, indexd + 1); // Increment the index for the next key pair
-    console.log("New key pair added to containers.");
-  });
-
-  return <button className="wallet-button" onClick={updateState}>⚡ Generate Keys</button>;
+  return <button className="wallet-button" onClick={keyPair}>⚡ Generate Keys</button>;
 }
 function Show_the_stuff() {
-  const get_ar = useRecoilValue(containers);
+  const ids = useRecoilValue(d_id);
+  
+  const [get_ar, setGetAr] = useState([]);
   const [copiedStates, setCopiedStates] = useState({});
+  const fetchData = useRecoilCallback(({ snapshot }) => async (currentIds) => {
+    const containersList = [];
+    for (let j = 0; j < currentIds; j++) {
+      const container = await snapshot.getPromise(containersFamily(j));
+      containersList.push({
+        id: j,
+        private_key: container.privateKey,
+        public_key: container.address
+      });
+    }
+    setGetAr(containersList);
+  }, []);
+  useEffect(() => {
+    fetchData(ids);
+  }, [ids, fetchData]);
 
   const handleCopyClick = (e, id) => {
     const text = e.target.innerText;
@@ -182,7 +190,7 @@ function Generate_nem() {
     set(clearKeysAtom, true);
     setTimeout(() => {
       set(clearKeysAtom, false);
-      set(containers, []);
+      set(d_id, 0);
     }, 500);
   });
 
