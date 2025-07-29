@@ -98,7 +98,7 @@
     0 0 20px rgba(0, 255, 255, 0.1);
   transition: all 0.3s ease;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   max-width: 500px;
   width: 100%;
 }
@@ -326,8 +326,10 @@
   cursor: pointer;
   transition: all 0.3s ease;
   user-select: text;
-  white-space: pre-wrap;
-  word-break: break-word;
+  white-space: nowrap;
+  overflow-x: auto;
+  text-overflow: ellipsis;
+  max-width: 100%;
   margin-bottom: 0.5rem;
   text-align: center;
   min-height: calc(1.1rem * 1.5 * 4); /* font-size * line-height * 3 lines */
@@ -343,4 +345,58 @@
   color: #00ff99;
   border-color: #00ff99;
   box-shadow: 0 0 10px #00ff99aa;
+}
+.label-with-help {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.hover-help {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  color: #00f0ff;
+  font-size: 1rem;
+  margin-left: 8px;
+}
+
+.hover-help-popup {
+  display: none;
+  position: absolute;
+  bottom: 200%;
+  left: -200%;
+  transform: translateX(-50%);
+  background-color: rgba(1, 13, 1, 0.3);
+  color: #f2f4f4;
+  padding: 8px 12px;
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  min-width: 220px;
+  max-width: 240px;
+  text-align: center;
+  z-index: 99;
+  box-shadow: 0 0 12px rgba(0,255,255,0.2);
+  backdrop-filter: blur(100px);
+  pointer-events: none;
+  white-space: normal;
+  line-height: 1.4;
+}
+
+.hover-help:hover .hover-help-popup {
+  display: block;
+}
+
+
+.input-seed-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  position: relative;
+  padding: 8px 12px;
+  
+}
+.help-icon {
+  width: 40px;
+  height: 40px;
 }

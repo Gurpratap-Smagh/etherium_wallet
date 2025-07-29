@@ -4,7 +4,7 @@ import { RecoilRoot, useRecoilValue, useSetRecoilState, useRecoilCallback } from
 import { containersFamily, seed_phrase, d_id, clearKeysAtom} from './atoms.jsx'
 import './App.css'
 import { Mnemonic, ethers, Wallet } from 'ethers' // took me ages to realise, we must do alot of work to use bip32 and others
-
+import help_icon from './assets/icon.png'
 function App() {
 
   return (
@@ -53,7 +53,10 @@ function Ethos() {
     <div className="content-card">
       <h2 className="form-label">🔐 Ethereum Wallet Generator</h2>
       <div className="form-group">
-        <label className="form-label">Seed Phrase</label>
+        <div className="input-seed-container">
+          <label className="form-label">Seed Phrase</label>
+          <HelpTooltip />
+        </div>
         <Input_seed />
       </div>
       <div className="form-group">
@@ -62,6 +65,17 @@ function Ethos() {
       </div>
       <Show_the_stuff />
     </div>
+  );
+}
+function HelpTooltip() {
+  return (
+    <span className="hover-help">
+  <img src = {help_icon} className='help-icon' />
+  <span className="hover-help-popup">
+    Keep it private. Anyone who sees this can steal your crypto.
+  </span>
+</span>
+
   );
 }
 function Input_seed() {
@@ -74,6 +88,7 @@ function Input_seed() {
   };
 
   return (
+    
     <div className={`wallet-readonly-container ${copied ? 'copied' : ''}`}>
     <div
     className={`wallet-readonly copyshi ${copied ? 'copied' : ''}`}
@@ -84,6 +99,8 @@ function Input_seed() {
     {seed_value.phrase}
   </div>
 </div>
+    
+
   )
 }
 // function Handle_change() {
