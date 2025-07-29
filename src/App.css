@@ -326,9 +326,8 @@
   cursor: pointer;
   transition: all 0.3s ease;
   user-select: text;
-  white-space: nowrap;
-  overflow-x: auto;
-  text-overflow: ellipsis;
+  white-space: pre-wrap;
+  word-break: break-word;
   max-width: 100%;
   margin-bottom: 0.5rem;
   text-align: center;
