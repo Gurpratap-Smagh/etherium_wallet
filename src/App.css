@@ -1,5 +1,9 @@
 /* Bromskiii Wallet - Dark/Neon Blackhat Theme */
-
+html, body {
+  overscroll-behavior: none;
+  overscroll-behavior-y: none; /* locks vertical */
+  overflow-x: hidden;
+}
 #root {
   min-height: 100vh;
   padding: 0;
