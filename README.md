@@ -1,17 +1,28 @@
-<<<<<<< HEAD
-# etherium_wallet
-Uses HDwallets to generate ethereum wallets. Also has extra features like checking public address from private key and checking the balance.
-=======
-# React + Vite
+# Bromskiii Wallet  
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Live**: [https://etherium-wallet-rouge.vercel.app/](https://etherium-wallet-rouge.vercel.app/)  
 
-Currently, two official plugins are available:
+**Deployment**: Stateless app, delivered as a container on **Google Cloud**, secured via **IAM policies**.  
+**Blockchain**: Pure **Ethereum** operations, no backend accounts, no data storage.  
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **Ethereum Wallet Generator**  
+  Generate seed phrases and derive private/public key pairs.  
 
+- **Balance Check**  
+  Enter any Ethereum address and fetch real-time ETH and USD balance.  
+
+- **Key Converter**  
+  Convert private keys into their corresponding public addresses.  
+
+---
+
+## Tech Stack
+
+- **Frontend**: React  
+- **Blockchain Interaction**: Ethers.js + Ethereum JSON-RPC  
+
+---
